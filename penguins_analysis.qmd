@@ -66,7 +66,9 @@ Please note that all of these methods of reading data in to R are *reproducible*
 
 ```{r}
 
+uri_gentoo <- "https://portal.edirepository.org/nis/dataviewer?packageid=knb-lter-pal.220.3&entityid=e03b43c924f226486f2f0ab6709d2381"
 
+gentoo_penguins_data_from_uri <- read.csv(uri_gentoo)
 
 ```
 
