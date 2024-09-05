@@ -68,7 +68,7 @@ Please note that all of these methods of reading data in to R are *reproducible*
 
 uri_gentoo <- "https://portal.edirepository.org/nis/dataviewer?packageid=knb-lter-pal.220.3&entityid=e03b43c924f226486f2f0ab6709d2381"
 
-gentoo_penguins_data_from_uri <- read.csv(uri_gentoo)
+gentoo_penguins_data_from_uri <- read_csv(uri_gentoo)
 
 ```
 
@@ -129,6 +129,16 @@ What other packages/functions do a similar thing?
     -   How about a Chat GPT search?
 
 -   Type you answer(s) in bullet points below
+
+    -   Hmisc
+
+    -   summarytools
+
+    -   pastecs
+
+    -   psych
+
+    -   DataExplorer
 
 #### Data Visualization
 
@@ -232,7 +242,14 @@ ggplot(data = penguins_data_from_csv, aes(x = flipper_length_mm, y = body_mass_g
     -   In the code chunk below create a histogram with culmen_depth_mm on the x axis and color by species using the dataframe *penguins_data_from_csv*. Give the plot the theme: theme_bw(). Assign a color palette with *scale_fill_viridis_d()*. Give the plot a title, subtitile and custom x and y axis titles.
 
 ```{r}
-
+ggplot(data = penguins_data_from_csv, aes(x = culmen_depth_mm, fill = species)) +
+  geom_histogram(alpha =0.5) +
+  theme_bw() +
+  scale_fill_viridis_d() +
+  labs(title = "Palmer Penguins, Distribution of Culmen Depth",
+       subtitle = "3 penguin species observed on three islands in the Palmer Archipelago, Antarctica",
+       x = "culmen depth (mm)",
+       y = "number of penguins")
 ```
 
 -   Part 2
@@ -240,7 +257,15 @@ ggplot(data = penguins_data_from_csv, aes(x = flipper_length_mm, y = body_mass_g
     -   In the code chunk below create a scatterplot with culmen_depth_mm on the x axis, body_mass_g on the y axis, and color by species using the dataframe *penguins_data_from_csv*. Give the plot the theme: theme_bw(). Assign a color palette with *scale_fill_viridis_d(option = "inferno")*. Give the plot a title, subtitile and custom x and y axis titles.
 
 ```{r}
-
+ggplot(data = penguins_data_from_csv, aes(x = culmen_depth_mm, y = body_mass_g, color = species)) +
+  geom_point() +
+  theme_bw() +
+  scale_color_viridis_d(option="inferno") +
+   labs(title = "Palmer Penguins, Culmen Depth & Body Mass",
+       subtitle = "3 penguin species observed on three islands in the Palmer Archipelago, Antarctica",
+       x = "culmen depth (mm)",
+       y = "body mass (g)")
+## that light yellow on white is no bueno
 ```
 
 #### Interactive Data Visualization
