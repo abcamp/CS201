@@ -140,6 +140,14 @@ What other packages/functions do a similar thing?
 
     -   DataExplorer
 
+-   Let's try!
+
+    ```{r}
+    library(DataExplorer)
+    introduce(penguins_data_from_csv)
+    plot_intro(penguins_data_from_csv)
+    ```
+
 #### Data Visualization
 
 Wohoo!! ggplot is the most common package used for data visualization in R!
@@ -181,7 +189,7 @@ Manually exciting colors is cool, but there are also color palettes available fo
 ```{r}
 ggplot(data = penguins_data_from_csv, aes(x = flipper_length_mm, fill = species)) +
   geom_histogram(alpha =0.5) +
-  theme_bw() +
+  theme_bw() + 
   scale_fill_viridis_d() +
   labs(title = "Palmer Penguins, Distribution of Flipper Length",
        subtitle = "3 penguin species observed on three islands in the Palmer Archipelago, Antarctica",
@@ -201,7 +209,7 @@ Again, let's customize!
 ```{r}
 ggplot(data = penguins_data_from_csv, aes(x = species, y = flipper_length_mm, fill = species)) +
   geom_boxplot() +
-  geom_jitter(size = 0.2) +
+  geom_jitter(size = 0.5) +
   theme_bw() +
   scale_fill_viridis_d() +
   labs(title = "Palmer Penguins, Distribution of Flipper Length",
@@ -245,11 +253,11 @@ ggplot(data = penguins_data_from_csv, aes(x = flipper_length_mm, y = body_mass_g
 ggplot(data = penguins_data_from_csv, aes(x = culmen_depth_mm, fill = species)) +
   geom_histogram(alpha =0.5) +
   theme_bw() +
-  scale_fill_viridis_d() +
+  scale_fill_viridis_d() + 
   labs(title = "Palmer Penguins, Distribution of Culmen Depth",
        subtitle = "3 penguin species observed on three islands in the Palmer Archipelago, Antarctica",
        x = "culmen depth (mm)",
-       y = "number of penguins")
+       y = "number of penguins") 
 ```
 
 -   Part 2
