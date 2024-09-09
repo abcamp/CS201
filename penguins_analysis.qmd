@@ -407,14 +407,24 @@ Our first plots did not call for us to manipulate the data at all. How about if 
 -   In the code chunk below create a new dataframe called *average_species_flipper_length* that has the average flipper length for each species
 
 ```{r}
-
-
+average_species_flipper_length <- penguins_data_from_csv %>% 
+  group_by(species) %>% 
+  summarise(average_flipper_length_mm = mean(flipper_length_mm, na.rm = TRUE), average_flipper_length_sd = sd(flipper_length_mm, na.rm = TRUE))
+view(average_species_flipper_length)
 ```
 
 -   In the code chunk below, plot *average_species_flipper_length* using *ggplot()* and geom_bar(). Customize the graph with colors, a theme, and labels
 
 ```{r}
-
+ggplot(data = average_species_flipper_length, aes(x = species, y = average_flipper_length_mm, fill = species)) +
+  geom_bar(stat = "identity") +
+  geom_errorbar(aes(ymin=average_flipper_length_mm-average_flipper_length_sd, ymax=average_flipper_length_mm+average_flipper_length_sd), width=0.25, colour="orange", alpha=0.75, size=0.5) + # just for fun
+  theme_bw() +
+  scale_x_discrete(labels=c('Adelie', 'Chinstrap', 'Gentoo')) +
+  xlab("Penguin Species") +
+  ylab("Average Flipper Length (mm)") +
+  labs(fill="Species") +
+  scale_fill_viridis_d(option="mako")
 
 ```
 
@@ -432,6 +442,53 @@ Let's say the only way to get the penguins data was via the uri. At the top of t
 
 1.  Create a boxplot of body mass by species & make the plot interactive
     1.  Hint: geom_boxplot(), ggplotly()
-2.  How many penguins live on Torgersen Island?
-3.  Create a dataframe that has the average culmen depth for each species
+
+```{r}
+plot_average_species_flipper_length <- ggplot(data = average_species_flipper_length, aes(x = species, y = average_flipper_length_mm, fill = species)) +
+  geom_bar(stat = "identity") +
+  geom_errorbar(aes(ymin=average_flipper_length_mm-average_flipper_length_sd, ymax=average_flipper_length_mm+average_flipper_length_sd), width=0.25, colour="orange", alpha=0.75, size=0.5) +
+  theme_bw() +
+  scale_x_discrete(labels=c('Adelie', 'Chinstrap', 'Gentoo')) +
+  xlab("Penguin Species") +
+  ylab("Average Flipper Length (mm)") +
+  labs(fill="Species") +
+  scale_fill_viridis_d(option="mako")
+
+ggplotly(plot_average_species_flipper_length)
+
+## Hey Connor! I wonder why when you hover over any of the bars below, "species" is listed twice. Any ideas?
+```
+
+1.  How many penguins live on Torgersen Island?
+
+```{r}
+penguins_data_from_csv$island <- as.factor(penguins_data_from_csv$island)
+summary(penguins_data_from_csv$island)
+
+#Answer is 52. Here is another nice way to answer this, and you dont even have to re-class the variable first:
+
+penguins_data_from_csv %>%
+  count(island)
+```
+
+1.  Create a dataframe that has the average culmen depth for each species
     1.  Make a bar plot of the new dataframe with species on the x axis and average culmen depth on the y axis
+
+```{r}
+average_species_culmen_depth <- penguins_data_from_csv %>% 
+  group_by(species) %>% 
+  summarise(average_culmen_depth_mm = mean(culmen_depth_mm, na.rm = TRUE), average_culmen_depth_sd = sd(culmen_depth_mm, na.rm = TRUE))
+#view(average_species_culmen_depth)
+
+plot_average_species_culmen_depth <- ggplot(data = average_species_culmen_depth, aes(x = species, y = average_culmen_depth_mm, fill = species)) +
+  geom_bar(stat = "identity") +
+  geom_errorbar(aes(ymin=average_culmen_depth_mm-average_culmen_depth_sd, ymax=average_culmen_depth_mm+average_culmen_depth_sd), width=0.25, colour="orange", alpha=0.75, size=0.5) + # just for fun
+  theme_bw() +
+  scale_x_discrete(labels=c('Adelie', 'Chinstrap', 'Gentoo')) +
+  xlab("Penguin Species") +
+  ylab("Average Culmen Depth (mm)") +
+  labs(fill="Species") +
+  scale_fill_viridis_d()
+
+ggplotly(plot_average_species_culmen_depth)
+```
