@@ -64,7 +64,7 @@ Please note that all of these methods of reading data in to R are *reproducible*
         https://portal.edirepository.org/nis/dataviewer?packageid=knb-lter-pal.220.3&entityid=e03b43c924f226486f2f0ab6709d2381
         ```
 
-```{r}
+```{r, message=FALSE}
 
 uri_gentoo <- "https://portal.edirepository.org/nis/dataviewer?packageid=knb-lter-pal.220.3&entityid=e03b43c924f226486f2f0ab6709d2381"
 
@@ -92,20 +92,20 @@ Lets start by cleaning one column name manually, so you can appreciate the janit
 
 First, with Base R
 
-```{r}
+```{r, message=FALSE}
 names(penguins_data_from_csv)[names(penguins_data_from_csv) == "Culmen Length (mm)"] <- "culmen_length_mm"
 ```
 
 Second, with the dplyr package
 
-```{r}
+```{r, message=FALSE}
 penguins_data_from_csv <- penguins_data_from_csv %>% 
   rename(culmen_depth_mm = "Culmen Depth (mm)")
 ```
 
 We are lucky our penguins dataframe only has 17 columns, but often times dataframes can have many more. So manually cleaning column names with base R or dplyr is highly inefficient. Here's where the janitor package, clean_names() function comes to the rescue!
 
-```{r}
+```{r, message=FALSE}
 penguins_data_from_csv <- penguins_data_from_csv %>% 
   clean_names()
 ```
@@ -116,7 +116,7 @@ Awesome, now all of our column names are clean and our dataframe is ready for an
 
 The skim() function from the skimr package gives us a cool overview of the data with one line of code
 
-```{r}
+```{r, message=FALSE}
 skimr::skim(penguins_data_from_csv)
 ```
 
@@ -142,7 +142,7 @@ What other packages/functions do a similar thing?
 
 -   Let's try!
 
-    ```{r}
+    ```{r, message=FALSE}
     library(DataExplorer)
     introduce(penguins_data_from_csv)
     plot_intro(penguins_data_from_csv)
@@ -154,7 +154,7 @@ Wohoo!! ggplot is the most common package used for data visualization in R!
 
 Let's start with the most basic plot we can make
 
-```{r}
+```{r, message=FALSE}
 ggplot(data = penguins_data_from_csv, aes(x = flipper_length_mm)) +
   geom_histogram()
 
@@ -162,7 +162,7 @@ ggplot(data = penguins_data_from_csv, aes(x = flipper_length_mm)) +
 
 Cool! What if we color the histogram by species
 
-```{r}
+```{r, message=FALSE}
 ggplot(data = penguins_data_from_csv, aes(x = flipper_length_mm, fill = species)) +
   geom_histogram()
 
@@ -172,7 +172,7 @@ Interesting! Seems like flipper length is very dependent on species of penguin
 
 The magic of ggplot is simplicity and *customization* so let's customize
 
-```{r}
+```{r, message=FALSE}
 ggplot(data = penguins_data_from_csv, aes(x = flipper_length_mm, fill = species)) +
   geom_histogram(alpha =0.5) +
   theme_bw() +
@@ -186,7 +186,7 @@ ggplot(data = penguins_data_from_csv, aes(x = flipper_length_mm, fill = species)
 
 Manually exciting colors is cool, but there are also color palettes available for us with viridis
 
-```{r}
+```{r, message=FALSE}
 ggplot(data = penguins_data_from_csv, aes(x = flipper_length_mm, fill = species)) +
   geom_histogram(alpha =0.5) +
   theme_bw() + 
@@ -199,14 +199,14 @@ ggplot(data = penguins_data_from_csv, aes(x = flipper_length_mm, fill = species)
 
 Let's investigate flipper length with another type of data viz
 
-```{r}
+```{r, message=FALSE}
 ggplot(data = penguins_data_from_csv, aes(x = species, y = flipper_length_mm, fill = species)) +
   geom_boxplot()
 ```
 
 Again, let's customize!
 
-```{r}
+```{r, message=FALSE}
 ggplot(data = penguins_data_from_csv, aes(x = species, y = flipper_length_mm, fill = species)) +
   geom_boxplot() +
   geom_jitter(size = 0.5) +
@@ -224,14 +224,14 @@ ggplot(data = penguins_data_from_csv, aes(x = species, y = flipper_length_mm, fi
 
 Awesome! Let's take a look at flipper length and it's relationship to body mass
 
-```{r}
+```{r, message=FALSE}
 ggplot(data = penguins_data_from_csv, aes(x = flipper_length_mm, y = body_mass_g)) +
   geom_point()
 ```
 
 Cool! Let's add species and island to this plot
 
-```{r}
+```{r, message=FALSE}
 ggplot(data = penguins_data_from_csv, aes(x = flipper_length_mm, y = body_mass_g, color = species, shape = island)) +
   geom_point() +
   theme_bw() +
@@ -249,7 +249,7 @@ ggplot(data = penguins_data_from_csv, aes(x = flipper_length_mm, y = body_mass_g
 
     -   In the code chunk below create a histogram with culmen_depth_mm on the x axis and color by species using the dataframe *penguins_data_from_csv*. Give the plot the theme: theme_bw(). Assign a color palette with *scale_fill_viridis_d()*. Give the plot a title, subtitile and custom x and y axis titles.
 
-```{r}
+```{r, message=FALSE}
 ggplot(data = penguins_data_from_csv, aes(x = culmen_depth_mm, fill = species)) +
   geom_histogram(alpha =0.5) +
   theme_bw() +
@@ -264,7 +264,7 @@ ggplot(data = penguins_data_from_csv, aes(x = culmen_depth_mm, fill = species)) 
 
     -   In the code chunk below create a scatterplot with culmen_depth_mm on the x axis, body_mass_g on the y axis, and color by species using the dataframe *penguins_data_from_csv*. Give the plot the theme: theme_bw(). Assign a color palette with *scale_fill_viridis_d(option = "inferno")*. Give the plot a title, subtitile and custom x and y axis titles.
 
-```{r}
+```{r, message=FALSE}
 ggplot(data = penguins_data_from_csv, aes(x = culmen_depth_mm, y = body_mass_g, color = species)) +
   geom_point() +
   theme_bw() +
@@ -278,7 +278,7 @@ ggplot(data = penguins_data_from_csv, aes(x = culmen_depth_mm, y = body_mass_g, 
 
 #### Interactive Data Visualization
 
-```{r}
+```{r, message=FALSE}
 scatter_plot <- ggplot(data = penguins_data_from_csv, aes(x = flipper_length_mm, y = body_mass_g, color = species, shape = island)) +
   geom_point() +
   theme_bw() +
@@ -289,13 +289,13 @@ scatter_plot <- ggplot(data = penguins_data_from_csv, aes(x = flipper_length_mm,
        y = "body mass (g)")
 ```
 
-```{r}
+```{r, message=FALSE}
 ggplotly(scatter_plot)
 ```
 
 Aweome! Let's add one more variable to the plot, the sex of the penguin. Since we have already used our x axis, y axis, color, and shape for other variables, our best option is to use facet_wrap() to slit the plot into two plots based on sex
 
-```{r}
+```{r, message=FALSE}
 ggplot(data = penguins_data_from_csv, aes(x = flipper_length_mm, y = body_mass_g, color = species, shape = island)) +
   geom_point() +
   theme_bw() +
@@ -312,13 +312,13 @@ Interesting, it seems there are actually 4 unique sexes in the dataframe (male, 
 
 We could also have seen this with the unique() function
 
-```{r}
+```{r, message=FALSE}
 unique(penguins_data_from_csv$sex)
 ```
 
 -   If we wanted to know the number of penguins in each category for sex, we can use table(), however this does not include NA
 
-    ```{r}
+    ```{r, message=FALSE}
     table(penguins_data_from_csv$sex)
     ```
 
@@ -326,13 +326,13 @@ unique(penguins_data_from_csv$sex)
 
     -   This was also included in the skim() function in the beginning of this document
 
-```{r}
+```{r, message=FALSE}
 sum(is.na(penguins_data_from_csv$sex))
 ```
 
 Let;s filter for observations where sex is wither male or female and drop observations with na in the sex column
 
-```{r}
+```{r, message=FALSE}
 penguins_male_female <- penguins_data_from_csv %>% 
   filter(sex %in% c("MALE", "FEMALE")) %>% 
   drop_na(sex)
@@ -342,7 +342,7 @@ penguins_male_female <- penguins_data_from_csv %>%
 
 Let's let's make the same faceted scatter plot from the new dataframe
 
-```{r}
+```{r, message=FALSE}
 ggplot(data = penguins_male_female, aes(x = flipper_length_mm, y = body_mass_g, color = species, shape = island)) +
   geom_point() +
   theme_bw() +
@@ -360,7 +360,7 @@ Our first plots did not call for us to manipulate the data at all. How about if 
 
 -   Let's create a new dataframe called *average_body_masses* that has the average body mass for each penguin species. We'll do this by using the *group_by()* and *summarise()* functions.
 
-    ```{r}
+    ```{r, message=FALSE}
     average_species_body_mass <- penguins_data_from_csv %>% 
       group_by(species) %>% 
       summarise(average_body_mass = mean(body_mass_g, na.rm = TRUE))
@@ -368,14 +368,14 @@ Our first plots did not call for us to manipulate the data at all. How about if 
 
 -   Sweet! Now let's plot the results
 
-    ```{r}
+    ```{r, message=FALSE}
     ggplot(data = average_species_body_mass, aes(x = species, y = average_body_mass)) +
       geom_bar(stat = "identity")
     ```
 
 -   Cool, but let's clean the graph up
 
-    ```{r}
+    ```{r, message=FALSE}
     ggplot(data = average_species_body_mass, aes(x = species, y = average_body_mass, fill = species)) +
       geom_bar(stat = "identity") +
       theme_bw() +
@@ -388,7 +388,7 @@ Our first plots did not call for us to manipulate the data at all. How about if 
 
     -   Let's also get rid of the legend since the species is already written on the axis and add appropriate titles
 
-    ```{r}
+    ```{r, message=FALSE}
     ggplot(data = average_species_body_mass, aes(x = species, y = average_body_mass, fill = species)) +
       geom_bar(stat = "identity") +
       theme_bw() +
@@ -406,7 +406,7 @@ Our first plots did not call for us to manipulate the data at all. How about if 
 
 -   In the code chunk below create a new dataframe called *average_species_flipper_length* that has the average flipper length for each species
 
-```{r}
+```{r, message=FALSE}
 average_species_flipper_length <- penguins_data_from_csv %>% 
   group_by(species) %>% 
   summarise(average_flipper_length_mm = mean(flipper_length_mm, na.rm = TRUE), average_flipper_length_sd = sd(flipper_length_mm, na.rm = TRUE))
@@ -415,10 +415,10 @@ view(average_species_flipper_length)
 
 -   In the code chunk below, plot *average_species_flipper_length* using *ggplot()* and geom_bar(). Customize the graph with colors, a theme, and labels
 
-```{r}
+```{r, message=FALSE}
 ggplot(data = average_species_flipper_length, aes(x = species, y = average_flipper_length_mm, fill = species)) +
   geom_bar(stat = "identity") +
-  geom_errorbar(aes(ymin=average_flipper_length_mm-average_flipper_length_sd, ymax=average_flipper_length_mm+average_flipper_length_sd), width=0.25, colour="orange", alpha=0.75, size=0.5) + # just for fun
+  geom_errorbar(aes(ymin=average_flipper_length_mm-average_flipper_length_sd, ymax=average_flipper_length_mm+average_flipper_length_sd), width=0.25, colour="orange", alpha=0.75, linewidth=0.5) + # just for fun
   theme_bw() +
   scale_x_discrete(labels=c('Adelie', 'Chinstrap', 'Gentoo')) +
   xlab("Penguin Species") +
@@ -434,7 +434,7 @@ Let's say the only way to get the penguins data was via the uri. At the top of t
 
 -   We can use the function full_join()
 
-```{r}
+```{r, message=FALSE}
 # gentoo_adelie_penguins_data_joined <- full_join(gentoo_penguins_data_from_url, adelie_penguins_data_from_url)
 ```
 
@@ -443,10 +443,10 @@ Let's say the only way to get the penguins data was via the uri. At the top of t
 1.  Create a boxplot of body mass by species & make the plot interactive
     1.  Hint: geom_boxplot(), ggplotly()
 
-```{r}
+```{r, message=FALSE}
 plot_average_species_flipper_length <- ggplot(data = average_species_flipper_length, aes(x = species, y = average_flipper_length_mm, fill = species)) +
   geom_bar(stat = "identity") +
-  geom_errorbar(aes(ymin=average_flipper_length_mm-average_flipper_length_sd, ymax=average_flipper_length_mm+average_flipper_length_sd), width=0.25, colour="orange", alpha=0.75, size=0.5) +
+  geom_errorbar(aes(ymin=average_flipper_length_mm-average_flipper_length_sd, ymax=average_flipper_length_mm+average_flipper_length_sd), width=0.25, colour="orange", alpha=0.75, linewidth=0.5) +
   theme_bw() +
   scale_x_discrete(labels=c('Adelie', 'Chinstrap', 'Gentoo')) +
   xlab("Penguin Species") +
@@ -461,7 +461,7 @@ ggplotly(plot_average_species_flipper_length)
 
 1.  How many penguins live on Torgersen Island?
 
-```{r}
+```{r, message=FALSE}
 penguins_data_from_csv$island <- as.factor(penguins_data_from_csv$island)
 summary(penguins_data_from_csv$island)
 
@@ -474,7 +474,7 @@ penguins_data_from_csv %>%
 1.  Create a dataframe that has the average culmen depth for each species
     1.  Make a bar plot of the new dataframe with species on the x axis and average culmen depth on the y axis
 
-```{r}
+```{r, message=FALSE}
 average_species_culmen_depth <- penguins_data_from_csv %>% 
   group_by(species) %>% 
   summarise(average_culmen_depth_mm = mean(culmen_depth_mm, na.rm = TRUE), average_culmen_depth_sd = sd(culmen_depth_mm, na.rm = TRUE))
@@ -482,7 +482,7 @@ average_species_culmen_depth <- penguins_data_from_csv %>%
 
 plot_average_species_culmen_depth <- ggplot(data = average_species_culmen_depth, aes(x = species, y = average_culmen_depth_mm, fill = species)) +
   geom_bar(stat = "identity") +
-  geom_errorbar(aes(ymin=average_culmen_depth_mm-average_culmen_depth_sd, ymax=average_culmen_depth_mm+average_culmen_depth_sd), width=0.25, colour="orange", alpha=0.75, size=0.5) + # just for fun
+  geom_errorbar(aes(ymin=average_culmen_depth_mm-average_culmen_depth_sd, ymax=average_culmen_depth_mm+average_culmen_depth_sd), width=0.25, colour="orange", alpha=0.75, linewidth=0.5) + # just for fun
   theme_bw() +
   scale_x_discrete(labels=c('Adelie', 'Chinstrap', 'Gentoo')) +
   xlab("Penguin Species") +
