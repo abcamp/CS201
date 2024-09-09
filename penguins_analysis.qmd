@@ -1,6 +1,6 @@
 ---
 title: "Analyzing Penguins Data"
-author: "Connor Flynn"
+author: "Connor Flynn (edited by Amber Camp)"
 format: html
 editor: visual
 ---
