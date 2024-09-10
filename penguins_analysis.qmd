@@ -397,8 +397,8 @@ Our first plots did not call for us to manipulate the data at all. How about if 
       theme(legend.position = "none") +
       labs(title = "Palmer Penguins, Average Body Mass by Species",
            subtitle = "3 penguin species observed on three islands in the Palmer Archipelago, Antarctica",
-           x = "average body mass (g)",
-           y = "species")
+           x = "species",
+           y = "average body mass (g)")
       
     ```
 
@@ -423,7 +423,7 @@ ggplot(data = average_species_flipper_length, aes(x = species, y = average_flipp
   scale_x_discrete(labels=c('Adelie', 'Chinstrap', 'Gentoo')) +
   xlab("Penguin Species") +
   ylab("Average Flipper Length (mm)") +
-  labs(fill="Species") +
+  labs(title = "Average Flipper Length by Species (Palmer Penguins)", fill="Species") +
   scale_fill_viridis_d(option="mako")
 
 ```
@@ -444,29 +444,30 @@ Let's say the only way to get the penguins data was via the uri. At the top of t
     1.  Hint: geom_boxplot(), ggplotly()
 
 ```{r, message=FALSE}
-plot_average_species_flipper_length <- ggplot(data = average_species_flipper_length, aes(x = species, y = average_flipper_length_mm, fill = species)) +
-  geom_bar(stat = "identity") +
-  geom_errorbar(aes(ymin=average_flipper_length_mm-average_flipper_length_sd, ymax=average_flipper_length_mm+average_flipper_length_sd), width=0.25, colour="orange", alpha=0.75, linewidth=0.5) +
+boxplot_species_body_mass <- ggplot(data = penguins_data_from_csv, aes(x = species, y = body_mass_g , fill = species)) +
+  geom_boxplot() +
   theme_bw() +
   scale_x_discrete(labels=c('Adelie', 'Chinstrap', 'Gentoo')) +
   xlab("Penguin Species") +
-  ylab("Average Flipper Length (mm)") +
-  labs(fill="Species") +
-  scale_fill_viridis_d(option="mako")
+  ylab("Body Mass (g)") +
+  labs(title = "Body Mass by Species (Palmer Penguins)", fill="Species") +
+  scale_fill_viridis_d(option="magma")
 
-ggplotly(plot_average_species_flipper_length)
-
-## Hey Connor! I wonder why when you hover over any of the bars below, "species" is listed twice. Any ideas?
+ggplotly(boxplot_species_body_mass)
 ```
 
 1.  How many penguins live on Torgersen Island?
 
 ```{r, message=FALSE}
+# Use table:
+table(penguins_data_from_csv$island)
+
+# Use summary
 penguins_data_from_csv$island <- as.factor(penguins_data_from_csv$island)
 summary(penguins_data_from_csv$island)
 
-#Answer is 52. Here is another nice way to answer this, and you dont even have to re-class the variable first:
 
+# You can use dplyr, and you wouldn't even have to re-class the variable first:
 penguins_data_from_csv %>%
   count(island)
 ```
@@ -487,8 +488,11 @@ plot_average_species_culmen_depth <- ggplot(data = average_species_culmen_depth,
   scale_x_discrete(labels=c('Adelie', 'Chinstrap', 'Gentoo')) +
   xlab("Penguin Species") +
   ylab("Average Culmen Depth (mm)") +
-  labs(fill="Species") +
-  scale_fill_viridis_d()
+  labs(title = "Average Culmen Depth by Species (Palmer Penguins)", fill="Species") +
+  scale_fill_viridis_d() 
 
 ggplotly(plot_average_species_culmen_depth)
+
+## Hey Connor! I wonder why when you hover over any of the bars in this plot, 
+## "species" is listed twice. Any ideas?
 ```
