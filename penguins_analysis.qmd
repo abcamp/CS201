@@ -409,22 +409,23 @@ Our first plots did not call for us to manipulate the data at all. How about if 
 ```{r, message=FALSE}
 average_species_flipper_length <- penguins_data_from_csv %>% 
   group_by(species) %>% 
-  summarise(average_flipper_length_mm = mean(flipper_length_mm, na.rm = TRUE), average_flipper_length_sd = sd(flipper_length_mm, na.rm = TRUE))
+  summarise(average_flipper_length_mm = mean(flipper_length_mm, na.rm = TRUE), average_flipper_length_sd = sd(flipper_length_mm, na.rm = TRUE)) # added sd calculation here so that I can use it below
 view(average_species_flipper_length)
 ```
 
--   In the code chunk below, plot *average_species_flipper_length* using *ggplot()* and geom_bar(). Customize the graph with colors, a theme, and labels
+-   In the code chunk below, plot *average_species_flipper_length* using *ggplot()* and *geom_bar()*. Customize the graph with colors, a theme, and labels
 
 ```{r, message=FALSE}
 ggplot(data = average_species_flipper_length, aes(x = species, y = average_flipper_length_mm, fill = species)) +
   geom_bar(stat = "identity") +
-  geom_errorbar(aes(ymin=average_flipper_length_mm-average_flipper_length_sd, ymax=average_flipper_length_mm+average_flipper_length_sd), width=0.25, colour="orange", alpha=0.75, linewidth=0.5) + # just for fun
-  theme_bw() +
+  geom_errorbar(aes(ymin=average_flipper_length_mm-average_flipper_length_sd, ymax=average_flipper_length_mm+average_flipper_length_sd), width=0.25, colour="orange", alpha=0.75, linewidth=0.5) + # just for fun. here is where i used sd so i can get +/- error bars
+  theme_linedraw() +
   scale_x_discrete(labels=c('Adelie', 'Chinstrap', 'Gentoo')) +
   xlab("Penguin Species") +
   ylab("Average Flipper Length (mm)") +
   labs(title = "Average Flipper Length by Species (Palmer Penguins)", fill="Species") +
-  scale_fill_viridis_d(option="mako")
+  scale_fill_viridis_d(option="mako") #+
+  #theme(legend.position = "none") #if you wanted to remove the legend, but I don't right now
 
 ```
 
@@ -435,8 +436,14 @@ Let's say the only way to get the penguins data was via the uri. At the top of t
 -   We can use the function full_join()
 
 ```{r, message=FALSE}
-# gentoo_adelie_penguins_data_joined <- full_join(gentoo_penguins_data_from_url, adelie_penguins_data_from_url)
+gentoo_adelie_penguins_data_joined <- full_join(gentoo_penguins_data_from_uri, adelie_penguins_data_from_url)
+summary(gentoo_adelie_penguins_data_joined) # inspect
+unique(gentoo_adelie_penguins_data_joined$Species) # confirm
+gentoo_adelie_penguins_data_joined %>% # count
+  count(Species)
 ```
+
+## Assignment 1 Part 1 
 
 #### Final Exercises {style="color: #B8860B;"}
 
