@@ -1,0 +1,33 @@
+---
+title: "DPLYR penguins"
+author: "Amber Camp"
+date: "11 Sep 2024"
+format: html
+editor: visual
+---
+
+```{r}
+library(tidyverse)
+library(palmerpenguins)
+library(here)
+library(janitor)
+```
+
+```{r}
+penguins <- read_csv(here("data/penguins_lter.csv")) # read in data
+
+penguins <- penguins %>% # clean up the names
+  clean_names()
+
+```
+
+# Assignment 1, Part 2
+
+This is the second part of Assignment 1. Exercises from from , starting with number 3.
+
+## 3. filter()
+
+```{r}
+penguins %>%
+  filter(species == "Gentoo penguin (Pygoscelis papua)")
+```
