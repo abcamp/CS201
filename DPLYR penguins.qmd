@@ -23,11 +23,99 @@ penguins <- penguins %>% # clean up the names
 
 # Assignment 1, Part 2
 
-This is the second part of Assignment 1. Exercises from from , starting with number 3.
+This is the second part of Assignment 1. Exercises from from <https://allisonhorst.shinyapps.io/dplyr-learnr/#section-dplyrfilter>, starting with section 3.
 
 ## 3. filter()
 
+#### Practice Activity 1
+
+Use `filter()` to create a subset from `penguins` that only contains gentoo penguins with a bill depth greater than or equal to 15.5 millimeters.
+
+```{r, messages=FALSE}
+unique(penguins$species)
+
+gentoo_15.5_only <- penguins %>%
+  filter(species == "Gentoo penguin (Pygoscelis papua)", culmen_depth_mm >=15.5)
+
+unique(gentoo_15.5_only$species)
+summary(gentoo_15.5_only$culmen_depth_mm)
+```
+
+#### Practice Activity 2
+
+Use `filter()` to create a subset from `penguins` that contains observations for male penguins recorded at Dream and Biscoe Islands.
+
+```{r, messages=FALSE}
+head(penguins) # explore what data is where
+unique(penguins$sex) # there is some unbalanced data, but we don't have to deal with that right now
+unique(penguins$island)
+
+male_dreambiscoe_only <- penguins %>%
+  filter(sex == "MALE", island %in% c("Biscoe", "Dream"))
+
+unique(male_dreambiscoe_only$sex)
+unique(male_dreambiscoe_only$island)
+```
+
+#### Practice Activity 3
+
+Use `filter()` to create a subset from `penguins` that contains observations for female Adelie penguins with bill lengths less than 35 mm.
+
 ```{r}
-penguins %>%
-  filter(species == "Gentoo penguin (Pygoscelis papua)")
+female_shortbill_only <- penguins %>%
+  filter(sex == "FEMALE", culmen_length_mm < 35)
+
+unique(female_shortbill_only$sex)
+summary(female_shortbill_only$culmen_length_mm)
+```
+
+#### Practice Activity 4
+
+Create a subset from `penguins` containing observations for female chinstrap penguins on Dream and Torgersen Islands.
+
+```{r}
+female_chinstrap_dreamtorgersen_only <- penguins %>%
+  filter(sex == "FEMALE", island %in% c("Dream", "Torgersen"), str_detect(species, "^Chin"))
+
+unique(female_chinstrap_dreamtorgersen_only$sex)
+unique(female_chinstrap_dreamtorgersen_only$species)
+unique(female_chinstrap_dreamtorgersen_only$island) # only Dream is listed. suspect there are no female Chinstraps on Torgerson
+
+which_island <- penguins %>%
+  filter(sex == "FEMALE", str_detect(species, "^Chin")) %>%
+  pull(island)
+
+unique(which_island) # confirmed
+```
+
+#### Practice Activity 5
+
+Create a subset from `penguins` that contains penguins that are either gentoos **OR** have a body mass greater than 4500 g.
+
+```{r}
+big_or_gentoo <- penguins %>%
+  filter(body_mass_g > 4500 | str_detect(species, "^Gentoo"))
+
+if_gentoo <- big_or_gentoo %>%
+  filter(str_detect(species, "^Gentoo")) %>%
+  pull(body_mass_g)
+summary(if_gentoo) # when species is Gentoo, we get mass of various sizes. this is fine
+
+if_big <- big_or_gentoo %>%
+  filter(body_mass_g > 4500) %>%
+  pull(species)
+unique(if_big) # when mass > 4500, we get all three species. this fine
+
+# now let's try to break it
+if_small <- big_or_gentoo %>%
+  filter(body_mass_g < 4500) %>%
+  pull(species)
+unique(if_small) # there should be no species other than Gentoo with these conditions. correct!
+
+if_notgentoo <- big_or_gentoo %>%
+  filter(!str_detect(species, "^Gentoo")) %>%
+  pull(body_mass_g)
+unique(if_notgentoo) # if not Gentoo, should be greater than 4500g. and it's correct!
+
+
 ```
