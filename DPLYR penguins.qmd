@@ -23,7 +23,7 @@ penguins <- penguins %>% # clean up the names
 
 # Assignment 1, Part 2
 
-This is the second part of Assignment 1. Exercises from from <https://allisonhorst.shinyapps.io/dplyr-learnr/#section-dplyrfilter>, starting with section 3.
+This is the second part of Assignment 1. Exercises from from [https://allisonhorst.shinyapps.io/dplyr-learnr](https://allisonhorst.shinyapps.io/dplyr-learnr/#section-dplyrfilter){.uri}, starting with section 3.
 
 ## 3. filter()
 
@@ -81,11 +81,25 @@ unique(female_chinstrap_dreamtorgersen_only$sex)
 unique(female_chinstrap_dreamtorgersen_only$species)
 unique(female_chinstrap_dreamtorgersen_only$island) # only Dream is listed. suspect there are no female Chinstraps on Torgerson
 
+# make a table to inspect the data
+table(penguins$species, penguins$island) # confirmed! Chinstraps only live on Dream
+
+# inspect in other, more specific ways
+penguins %>%
+  filter(str_detect(species, "^Chin")) %>%
+  count(island, sex) # confirmed! looks like there are no Chinstrap penguins at all on Torgersen
+
+torgersen_species <- penguins %>%
+  filter(island == "Torgersen") %>%
+  pull(species)
+unique(torgersen_species) # confirmed again! only Adelies on Torgersen, apparently
+
 which_island <- penguins %>%
   filter(sex == "FEMALE", str_detect(species, "^Chin")) %>%
   pull(island)
+unique(which_island) # confirmed again. Female Chinstraps only live on Dream!
 
-unique(which_island) # confirmed
+
 ```
 
 #### Practice Activity 5
