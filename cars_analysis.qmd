@@ -1,0 +1,58 @@
+---
+title: "Cars Analysis"
+author: "Amber Camp"
+format: html
+editor: visual
+---
+
+#### Load in libraries
+
+```{r}
+library(tidyverse)
+library(plotly)
+```
+
+#### Read in Dataset
+
+```{r}
+mtcars <- datasets::mtcars
+
+# read about the data
+?mtcars
+```
+
+Let's examine the relationship between weight and miles per gallon
+
+```{r}
+ggplot(data = mtcars, aes(x = mpg, y = wt)) + 
+  geom_point() 
+```
+
+```{r}
+# both of these should work
+mtcars_t <- mtcars %>%
+  rownames_to_column("model")
+
+mtcars_t2 <- mtcars %>%
+  tibble::rownames_to_column("model")
+```
+
+```{r}
+basic_regression <- lm(wt ~ mpg, data = mtcars)
+summary(basic_regression)
+
+slope <- coef(basic_regression)[["mpg"]]
+intercept <- coef(basic_regression)[["(Intercept)"]]
+
+ggplot(data = mtcars, aes(x = mpg, y = wt)) + 
+  geom_point() +
+  geom_abline(intercept = intercept, slope = slope)
+```
+
+```{r}
+cars_wt_mpg <- ggplot(data = mtcars_t, aes(x = mpg, y = wt, point = model, color = hp)) + 
+  geom_point() 
+  
+
+ggplotly(cars_wt_mpg)
+```
