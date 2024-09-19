@@ -44,15 +44,57 @@ summary(basic_regression)
 slope <- coef(basic_regression)[["mpg"]]
 intercept <- coef(basic_regression)[["(Intercept)"]]
 
+library(ggpubr)
 ggplot(data = mtcars, aes(x = mpg, y = wt)) + 
   geom_point() +
-  geom_abline(intercept = intercept, slope = slope)
+  geom_smooth() + # get a trend line
+  stat_cor() + # get the correlation coefficient
+  geom_abline(intercept = intercept, slope = slope) # linear regression line 
+
+options(scipen=999) # disable scientific notation
+
+
 ```
 
 ```{r}
 cars_wt_mpg <- ggplot(data = mtcars_t, aes(x = mpg, y = wt, point = model, color = hp)) + 
-  geom_point() 
+  geom_point()
   
 
 ggplotly(cars_wt_mpg)
+
+
+```
+
+```{r}
+ggplot(data = mtcars_t, aes(x = mpg, y = wt, color = hp, label = model)) +
+  geom_point() +
+  geom_text(position = position_jitter(width = .3, height = .3), vjust = -1.5, size = 2, color = "black") +
+  scale_color_viridis_c()
+```
+
+```{r}
+library(DT) 
+datatable(data = mtcars, caption = "Table", filter = "top")
+class(mtcars$cyl)
+mtcars$cyl <- as.factor(mtcars$cyl)
+
+
+```
+
+```{r}
+mtcars_separated <- mtcars_t %>%
+  separate(model, into = c("make", "model"), sep = " ", extra = "merge", fill = "left")
+view(mtcars_separated)
+
+ggplot(data = mtcars_separated, aes(x = wt, y = mpg, color = make)) + 
+  geom_point() 
+
+# Find the average mpg by make
+average_mpg_by_make <- mtcars_separated %>% 
+  group_by(make) %>% 
+  summarise(average_mpg = mean(mpg, na.rm = TRUE)) 
+
+ggplot(data = average_mpg_by_make, aes(x = reorder(make, average_mpg), y = average_mpg)) + 
+  geom_bar(stat = "identity") 
 ```
