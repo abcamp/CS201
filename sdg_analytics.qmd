@@ -1,0 +1,52 @@
+---
+title: "SDG Analytics"
+author: "Amber Camp"
+date: 20 Sep 2024
+format: html
+editor: visual
+---
+
+```{r}
+library(tidyverse)
+library(here)
+library(janitor)
+library(plotly)
+library(ggpubr)
+```
+
+### Read in SDG Data
+
+```{r}
+sdg_data <- read_csv(here("data/SDR-2023-Data.csv"))
+
+unique(sdg_data$`Goal 1 Trend`)
+table(sdg_data$`Goal 1 Trend`)
+```
+
+### Clean column names
+
+```{r}
+sdg_data <- sdg_data %>%
+  clean_names()
+
+head(sdg_data)
+
+```
+
+### Bar Chart of SDG Scores for each country by region
+
+```{r}
+ggplot(data = sdg_data, aes(y = country, x = x2023_sdg_index_score)) +
+  geom_bar(stat = "identity") +
+  facet_wrap(~ regions_used_for_the_sdr, scales = "free")
+```
+
+### Create a scatter plot that compares two different goal scores
+
+```{r}
+ggplot(data = sdg_data, aes(x = goal_2_score, y = goal_4_score)) +
+  geom_point() + 
+  stat_smooth(se = FALSE) + 
+  stat_cor()
+
+```

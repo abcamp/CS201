@@ -95,6 +95,6 @@ average_mpg_by_make <- mtcars_separated %>%
   group_by(make) %>% 
   summarise(average_mpg = mean(mpg, na.rm = TRUE)) 
 
-ggplot(data = average_mpg_by_make, aes(x = reorder(make, average_mpg), y = average_mpg)) + 
+ggplot(data = average_mpg_by_make, aes(x = reorder(make, average_mpg), y = average_mpg, fill = average_mpg)) + 
   geom_bar(stat = "identity") 
 ```
