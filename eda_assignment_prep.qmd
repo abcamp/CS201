@@ -31,6 +31,12 @@ How many observations (rows) are there?
 
 How many variables (columns) are there?
 
+### skimr: Quick overview
+
+```{r}
+
+```
+
 ### Summary: Quick overview
 
 ```{r}
