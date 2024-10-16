@@ -1,0 +1,96 @@
+---
+title: "EDA Assignment Prep"
+author: "Amber Camp"
+format: html
+editor: visual
+---
+
+## EDA Assignment Prep: Pokemon data
+
+### Libraries
+
+```{r}
+library(here)
+library(tidyverse)
+library(janitor)
+```
+
+### Data
+
+```{r}
+
+```
+
+### Describe the data:
+
+Data author:
+
+Description:
+
+How many observations (rows) are there?
+
+How many variables (columns) are there?
+
+### Summary: Quick overview
+
+```{r}
+
+```
+
+### Categorical vs. Continuous
+
+```{r}
+
+```
+
+How many categorical variables are there?
+
+How many continuous variables are there?
+
+What are some variables of interest to you?
+
+------------------------------------------------------------------------
+
+## EDA Assignment Prep: \[Insert Data Name Here\]
+
+### Libraries
+
+```{r}
+library(here)
+library(tidyverse)
+library(janitor)
+```
+
+### Data
+
+```{r}
+
+```
+
+### Describe the data:
+
+Data author:
+
+Description:
+
+How many observations (rows) are there?
+
+How many variables (columns) are there?
+
+### Summary: Quick overview
+
+```{r}
+
+```
+
+### Categorical vs. Continuous
+
+```{r}
+
+```
+
+How many categorical variables are there?
+
+How many continuous variables are there?
+
+What are some variables of interest to you?
