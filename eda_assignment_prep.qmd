@@ -18,40 +18,59 @@ library(janitor)
 ### Data
 
 ```{r}
+pokedata <- read_csv(here("data/Pokemon.csv"))
 
+pokedata <- pokedata %>%
+  clean_names()
 ```
 
-### Describe the data:
+### Describe the data: Pokemon
 
-Data author:
+Data author: **ALBERTO BARRADAS**
 
-Description:
+<https://www.kaggle.com/datasets/abcsds/pokemon?resource=download>
 
-How many observations (rows) are there?
+Description: This is pokemon data for 721 pokemon and their stats.
 
-How many variables (columns) are there?
+How many observations (rows) are there? 800
+
+How many variables (columns) are there? 13
 
 ### skimr: Quick overview
 
 ```{r}
-
+skim_data <- skimr::skim(pokedata)
 ```
 
 ### Summary: Quick overview
 
 ```{r}
-
+summary(pokedata)
 ```
 
 ### Categorical vs. Continuous
 
 ```{r}
+class(pokedata$number) # checks class
+pokedata$number <- as.factor(pokedata$number) # converts to factor
+class(pokedata$number) # check class again
+summary(pokedata$number) # review the data in this variable
 
+summary(pokedata$type_1)
+pokedata$type_1 <- as.factor(pokedata$type_1)
+class(pokedata$type_1)
+summary(pokedata$type_1)
+
+pokedata$name <- as.factor(pokedata$name)
+pokedata$type_2 <- as.factor(pokedata$type_2)
+pokedata$generation <- as.factor(pokedata$generation)
+
+skim_data <- skimr::skim(pokedata)
 ```
 
-How many categorical variables are there?
+How many categorical variables are there? 5 (maybe 6?)
 
-How many continuous variables are there?
+How many continuous variables are there? 7
 
 What are some variables of interest to you?
 
