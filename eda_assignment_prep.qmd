@@ -1,6 +1,7 @@
 ---
 title: "EDA Assignment Prep"
 author: "Amber Camp"
+date: "`r Sys.Date()`"
 format: html
 editor: visual
 ---
@@ -9,7 +10,7 @@ editor: visual
 
 ### Libraries
 
-```{r}
+```{r, message=FALSE}
 library(here)
 library(tidyverse)
 library(janitor)
@@ -17,7 +18,7 @@ library(janitor)
 
 ### Data
 
-```{r}
+```{r, message=FALSE}
 pokedata <- read_csv(here("data/Pokemon.csv"))
 
 pokedata <- pokedata %>%
@@ -38,23 +39,29 @@ How many variables (columns) are there? 13
 
 ### skimr: Quick overview
 
-```{r}
+```{r, message=FALSE}
 skim_data <- skimr::skim(pokedata)
 ```
 
 ### Summary: Quick overview
 
-```{r}
+```{r, message=FALSE}
 summary(pokedata)
 ```
 
+With the summary, we can confirm what skimr told us: some of the data is in a class that will not be helpful for analysis. Let's take a closer look at changing classes below.
+
 ### Categorical vs. Continuous
 
-```{r}
+```{r, message=FALSE, results='hide'}
 class(pokedata$number) # checks class
 pokedata$number <- as.factor(pokedata$number) # converts to factor
 class(pokedata$number) # check class again
 summary(pokedata$number) # review the data in this variable
+
+# the reason I am converting to factor above is because I have looked at the data and decided
+# that I want to treat the data as categorical rather than numeric. they are numbers, but
+# they are id numbers related to each pokemon--not ordinal, measurements, or counts, etc. 
 
 summary(pokedata$type_1)
 pokedata$type_1 <- as.factor(pokedata$type_1)
@@ -65,30 +72,24 @@ pokedata$name <- as.factor(pokedata$name)
 pokedata$type_2 <- as.factor(pokedata$type_2)
 pokedata$generation <- as.factor(pokedata$generation)
 
-skim_data <- skimr::skim(pokedata)
+# here, i went ahead and converted the other variables to factor where it applies.
+# you don't have to do this ahead. it can be done later.
+# you can also convert back later at any point, if you need
 ```
 
-How many categorical variables are there? 5 (maybe 6?)
+How many categorical variables are there? 5 (maybe 6? legendary is "logical")
 
-How many continuous variables are there? 7
+How many numeric variables are there? 7
 
-What are some variables of interest to you?
+What are some variables of interest to you? how many legendary?
 
 ------------------------------------------------------------------------
 
 ## EDA Assignment Prep: \[Insert Data Name Here\]
 
-### Libraries
-
-```{r}
-library(here)
-library(tidyverse)
-library(janitor)
-```
-
 ### Data
 
-```{r}
+```{r, message=FALSE}
 
 ```
 
@@ -102,20 +103,28 @@ How many observations (rows) are there?
 
 How many variables (columns) are there?
 
-### Summary: Quick overview
+### skimr: Quick overview
 
-```{r}
+```{r, message=FALSE}
 
 ```
 
-### Categorical vs. Continuous
+### Summary: Quick overview
 
-```{r}
+```{r, message=FALSE}
+
+```
+
+### Categorical vs. Numeric
+
+```{r, message=FALSE}
 
 ```
 
 How many categorical variables are there?
 
-How many continuous variables are there?
+How many numeric variables are there?
 
 What are some variables of interest to you?
+
+What kinds of questions could you explore with this data? i'm going to try again
