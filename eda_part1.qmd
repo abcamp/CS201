@@ -1,0 +1,155 @@
+---
+title: "Exploratory Data Analysis, part 1"
+author: "Amber Camp"
+date: "`r Sys.Date()`"
+format: html
+editor: visual
+---
+
+## Exploratory Data Analysis
+
+This week, we're diving into visualization techniques to help you explore your data in a fun and structured way! Exploratory Data Analysis (or EDA, as some like to call it) is all about getting to know your data better. It’ll help you to explore the quality of your data, ask questions, seek out answers through visualizations, and even inspire more questions based on what you discover.
+
+We'll be practicing some tools/techniques you've already seen and will try a few new things. The final goal for the week will be for you to apply these techniques to your own data set.
+
+## Libraries
+
+```{r, message=FALSE}
+library(tidyverse)
+library(here)
+library(janitor)
+```
+
+## Data
+
+Read in the data and clean the column headers using janitor.
+
+```{r, message=FALSE}
+pokedata <- read_csv(here("data/Pokemon.csv"))
+
+pokedata <- pokedata %>%
+  clean_names()
+```
+
+Remember we have some data that we want to treat as factor, so let's go ahead and convert them now. This is carried over from last class
+
+```{r, message=FALSE, results='hide'}
+skim_data_before <- skimr::skim(pokedata)
+
+pokedata$number <- as.factor(pokedata$number)
+pokedata$type_1 <- as.factor(pokedata$type_1)
+pokedata$name <- as.factor(pokedata$name)
+pokedata$type_2 <- as.factor(pokedata$type_2)
+pokedata$generation <- as.factor(pokedata$generation)
+
+skim_data <- skimr::skim(pokedata)
+```
+
+## Variation and Covariation
+
+**Variation** refers to how the values *within* a variable can differ from one measurement to another.
+
+**Covariation** describes how two variables change together; when one variable changes, the other tends to change in a specific way, either increasing or decreasing in relation to it. This is *between* variables.
+
+Let's start by looking at the distribution of Pokemon by Special Attack (sp_atk) using a histogram. We'll get back to variation in a bit.
+
+```{r, message=FALSE}
+ggplot(pokedata, aes(x = sp_atk)) +
+  geom_histogram(binwidth = 20)
+```
+
+**Question!** What is the difference between a histogram and a bar chart?\
+Answer:
+
+```{r, message=FALSE}
+ggplot(pokedata, aes(x = type_1)) +
+  geom_bar()
+```
+
+### Pause for exploratory questions
+
+When you generate a visual for EDA, you should pause to see what the data is telling you, and perhaps ask yourself questions like:
+
+-   Does your visualization match your expectations?
+
+-   Which values are the most common? Why?
+
+-   Which values are the least common? Why?
+
+-   Do you see any unusual patterns? What could explain them?
+
+## Take a closer look
+
+Use code that you've already seen elsewhere to focus on certain "regions" of interest in your data.
+
+```{r}
+pokedata_0_100 <- pokedata |> # check it out! the new "pipe" (%>% still works)
+  filter(sp_atk < 100)
+
+ggplot(pokedata_0_100, aes(x = sp_atk)) +
+  geom_histogram(binwidth = 1) #+
+  #scale_x_continuous(breaks = seq(from = 0, to = 100, by = 25))
+```
+
+## Looking at outliers and unusual data
+
+Outliers are unusual observations that don’t quite fit the overall pattern of the data. They can arise from data entry mistakes, can represent extreme values that were recorded during data collection, or can even indicate significant new discoveries.
+
+```{r, message=FALSE}
+ggplot(pokedata, aes(x = sp_atk)) + 
+  geom_histogram(binwidth = 5)
+```
+
+### Zoom in using coord_cartesian()
+
+Define a window to take a closer look. You can also add an xlim() argument.
+
+```{r, message=FALSE}
+ggplot(pokedata, aes(x = sp_atk)) + 
+  geom_histogram() +
+  coord_cartesian(ylim = c(0, 50))
+```
+
+## Try again with sp_def
+
+Let's have a look at a similar, but potentially unrelated variable, Special Defense (sp_def).
+
+```{r, message=FALSE}
+ggplot(pokedata, aes(x = sp_def)) + 
+  geom_histogram(binwidth = 5)
+```
+
+### Zoom in using coord_cartesian()
+
+```{r, message=FALSE}
+ggplot(pokedata, aes(x = sp_def)) + 
+  geom_histogram() +
+  coord_cartesian(ylim = c(0, 50))
+```
+
+## How about a scatter plot to see how they correlate?
+
+```{r}
+ggplot(pokedata, aes(x = sp_atk, y = sp_def)) + 
+  geom_point()
+```
+
+## How about some boxplots?
+
+One for sp_atk:
+
+```{r, message=FALSE}
+ggplot(pokedata, aes(y = sp_atk)) +
+  geom_boxplot()
+```
+
+Another for sp_def:
+
+```{r, message=FALSE}
+ggplot(pokedata, aes(y = sp_def)) +
+  geom_boxplot()
+```
+
+### Question for next class: 
+
+-   How do you read a boxplot, and what are the different landmarks?
