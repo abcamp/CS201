@@ -34,7 +34,7 @@ pokedata <- pokedata %>%
 Remember we have some data that we want to treat as factor, so let's go ahead and convert them now. This is carried over from last class
 
 ```{r, message=FALSE, results='hide'}
-skim_data_before <- skimr::skim(pokedata)
+#skim_data_before <- skimr::skim(pokedata)
 
 pokedata$number <- as.factor(pokedata$number)
 pokedata$type_1 <- as.factor(pokedata$type_1)
@@ -42,7 +42,7 @@ pokedata$name <- as.factor(pokedata$name)
 pokedata$type_2 <- as.factor(pokedata$type_2)
 pokedata$generation <- as.factor(pokedata$generation)
 
-skim_data <- skimr::skim(pokedata)
+#skim_data <- skimr::skim(pokedata)
 ```
 
 ## Variation and Covariation
@@ -55,11 +55,11 @@ Let's start by looking at the distribution of Pokemon by Special Attack (sp_atk)
 
 ```{r, message=FALSE}
 ggplot(pokedata, aes(x = sp_atk)) +
-  geom_histogram(binwidth = 20)
+  geom_histogram(binwidth = 1)
 ```
 
 **Question!** What is the difference between a histogram and a bar chart?\
-Answer:
+Answer: Histograms are used for continuous data & bar charts can be used with categorical data
 
 ```{r, message=FALSE}
 ggplot(pokedata, aes(x = type_1)) +
@@ -87,8 +87,8 @@ pokedata_0_100 <- pokedata |> # check it out! the new "pipe" (%>% still works)
   filter(sp_atk < 100)
 
 ggplot(pokedata_0_100, aes(x = sp_atk)) +
-  geom_histogram(binwidth = 1) #+
-  #scale_x_continuous(breaks = seq(from = 0, to = 100, by = 25))
+  geom_histogram(binwidth = 1) +
+  scale_x_continuous(breaks = seq(from = 0, to = 100, by = 5))
 ```
 
 ## Looking at outliers and unusual data
@@ -107,7 +107,7 @@ Define a window to take a closer look. You can also add an xlim() argument.
 ```{r, message=FALSE}
 ggplot(pokedata, aes(x = sp_atk)) + 
   geom_histogram() +
-  coord_cartesian(ylim = c(0, 50))
+  coord_cartesian(ylim = c(0, 10), xlim = c(150, 200))
 ```
 
 ## Try again with sp_def
@@ -124,7 +124,7 @@ ggplot(pokedata, aes(x = sp_def)) +
 ```{r, message=FALSE}
 ggplot(pokedata, aes(x = sp_def)) + 
   geom_histogram() +
-  coord_cartesian(ylim = c(0, 50))
+  coord_cartesian(ylim = c(0, 20), xlim = c(150, 275))
 ```
 
 ## How about a scatter plot to see how they correlate?
@@ -153,3 +153,11 @@ ggplot(pokedata, aes(y = sp_def)) +
 ### Question for next class: 
 
 -   How do you read a boxplot, and what are the different landmarks?
+
+## Extra Credit!
+
+-   Share with the class how to read a boxplot (1pt each!)
+
+-   Find the difference(s) between \|\> and %\>% and email me (1pt)
+
+-   Share with the class on Wednesday, FCFS!!! (1pt)
