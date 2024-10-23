@@ -150,7 +150,7 @@ ggplot(pokedata, aes(y = sp_def)) +
   geom_boxplot()
 ```
 
-### Question for next class: 
+### Question for next class:
 
 -   How do you read a boxplot, and what are the different landmarks?
 
