@@ -48,13 +48,13 @@ pokedata$generation <- as.factor(pokedata$generation)
 
 How do we read boxplots? Also called box and whisker plot/diagram
 
--   Middle line:
+-   Middle line: median (Alex)
 
--   Box:
+-   Box: IQR (inter-quartile range) Lydia
 
--   Whiskers:
+-   Whiskers: range from min to max (excl outliers). +/-1.5 sd (Rhyn)
 
--   Dots:
+-   Dots: outliers (Christian)
 
 ```{r, message=FALSE}
 ggplot(pokedata, aes(y = hp)) +
@@ -78,9 +78,11 @@ ggplot(pokedata, aes(x = type_1, y = hp)) +
 
 ## Difference between \|\> and %\>%
 
--   \|\> is also called
+-   \|\> is also called native pipe or base R pipe
 
--   %\>% is also called
+-   %\>% is also called dplyr pipe, Magrittr pipe, pipe operator
+
+-   Rhyn, Alex, Izack
 
 -   
 
@@ -95,7 +97,7 @@ penguins_data <- penguins_data %>%
   clean_names()
 
 ggplot(penguins_data, aes(x = flipper_length_mm)) +
-  geom_histogram(binwidth = 1)
+  geom_histogram(binwidth = 1, na.rm=TRUE)
 ```
 
 ## Covariation
@@ -114,9 +116,9 @@ ggplot(pokedata, aes(x = defense, y = after_stat(density))) + # this one display
   geom_freqpoly(aes(color = generation), binwidth = 15, linewidth = 0.75)
 ```
 
-The difference between counts and density is that the counts represent raw total counts for each category/binwidth, while density shows the count standardized or normalized so that the area under each frequency polygon is one. The idea is that it puts all your data onto the same scale for interpretation.
+The difference between counts and density is that the counts represent raw total counts for each category/binwidth, while density shows the count standardized or normalized so that the area under each frequency polygon is 1. The idea is that it puts all your data onto the same scale for interpretation.
 
-Here is the same sort of example, this time using data from diamonds, which is already part of your ggplot2 package!
+Here is the same sort of example, this time using data from diamonds, which is already part of your ggplot2 package! Note that we can call upon and access the data without reading it in first.
 
 ```{r, message=FALSE}
 ggplot(diamonds, aes(x = price)) + 
@@ -140,11 +142,11 @@ View(diamonds)
 summary(diamonds)
 ```
 
-Looks like there are other factors that may affect price–not just cut. Let's start with a basic scatterplot looking at price vs. carat.
+Looks like there are other factors that could affect price – not just cut. Let's start with a basic scatterplot looking at price vs. carat.
 
 ```{r, message=FALSE}
 ggplot(diamonds, aes(x = carat, y = price)) +
-  geom_point() # try making the points transparent to 0.1
+  geom_point(alpha=0.1) # try making the points transparent to 0.1
 ```
 
 We can see the general trends, but it's a bit difficult to really see what is going on. Back to boxplots!
@@ -152,10 +154,21 @@ We can see the general trends, but it's a bit difficult to really see what is go
 First, we'll try making a boxplot with x = carat and y = price
 
 ```{r, message=FALSE}
-
+ggplot(diamonds, aes(x = carat, y = price)) +
+  geom_boxplot()
 ```
 
-This time, let's make the boxplots a bit more advanced. Here, we are binning carat into increments of 1, 0.5, and 0.1 for additional detail:
+It doesn't work that way! If you wanted, you could treat carat as a factor and try that way
+
+```{r}
+diamonds$carat_factor <- as.factor(diamonds$carat)
+
+ggplot(diamonds, aes(x = carat_factor, y = price)) +
+  geom_boxplot()
+# it works! but it's a little crazy. Let's move on...
+```
+
+This time, let's make the boxplots a bit more advanced. Here, we are keeping carat as numerical and then binning carat into increments of 1, 0.5, and 0.1 for some additional detail (but additional to a controlled degree!)
 
 ```{r, message=FALSE}
 ggplot(data = diamonds, mapping = aes(x = carat, y = price)) +
@@ -168,15 +181,14 @@ ggplot(data = diamonds, mapping = aes(x = carat, y = price)) +
   geom_boxplot(mapping = aes(group = cut_width(carat, 0.1)), orientation = "x")
 ```
 
-We can see the general trend that an increase in diamond carat size results in an Increase in price, with some outliers. We are getting closer to an answer, but what about color and clarity?
+We can see the general trend that an increase in diamond carat size results in an increase in price, with some outliers. We are getting closer to an answer, but what about color and clarity?
 
 ```{r, message=FALSE}
 ggplot(diamonds, aes(x = color, y = price)) +
   geom_boxplot()
-
 # automatically plots the factor color in alphabetical order.
-# FYI, color D (colorless) is considered better quality than color J (near colorless, more yellow), so let's reverse the order
 
+# FYI, color D (colorless) is considered better quality than color J (near colorless, more yellow), so let's reverse the order
 diamonds %>%
   mutate(color = fct_rev(color)) %>% # fct_rev(color) reverses the order of factors
   ggplot(aes(x = color, y = price)) +
@@ -194,11 +206,11 @@ ggplot(data = diamonds, aes(x = clarity, y = price)) +
 
 What is the relationship here?
 
-For color and clarity, is there more variation or covariation?
+For color and clarity, is there more visible variation or covariation?
 
 Between color, clarity, and carat, what is the best predictor of diamond prices?
 
-Let's not forget about cut! Is there a relationship between cut and carat? Cut is categorical and carat is numeric, so we can plot the two together
+Let's not forget about cut! Is there a relationship between cut and carat? Cut is categorical and carat is numeric, and we can plot the two together easily
 
 ```{r, message=FALSE}
 ggplot(diamonds, aes(x = cut, y = carat)) +
@@ -218,6 +230,8 @@ Observations:
 -   Is there a relationship between carat and cut?
 
 -   Which category has the largest carat diamonds?
+
+<!-- -->
 
 -   Intermediate conclusions: The factor with the most influence on price is carat. There may be a trade-off between carat and cut. Perhaps larger diamonds can be profitably sold even with a low quality cut, for example.
 
