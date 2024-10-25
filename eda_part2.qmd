@@ -1,5 +1,5 @@
 ---
-title: "Exploratory Data Analysis, part 1"
+title: "Exploratory Data Analysis, part 2"
 author: "Amber Camp"
 date: "`r Sys.Date()`"
 format: html
