@@ -153,6 +153,10 @@ mosaic(diamond_table,
        xlab = "Cut", 
        ylab = "Color", 
        shade = TRUE) # throws an error, but still works. see if you can figure it out
+
+print(diamond_table)
+is.na(diamond_table)
+is.infinite.POSIXlt(diamond_table)
 ```
 
 #### 2D Density Plot
