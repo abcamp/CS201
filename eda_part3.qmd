@@ -160,9 +160,15 @@ mosaic(diamond_table,
 Use this to visualize the density of points in a two-dimensional space.
 
 ```{r}
-ggplot(data = diamonds, aes(x = carat, y = price)) +
+ggplot(diamonds, aes(x = carat, y = price)) + # 2D density plot
   geom_density2d()
 
-ggplot(data = diamonds, aes(x = carat, y = price, color = cut)) +
+ggplot(diamonds, aes(x = carat, y = price)) + # compare to scatterplot, same data
+  geom_point(alpha=0.1)
+
+ggplot(diamonds, aes(x = carat, y = price, color = cut)) + # 2D density plot
   geom_density2d()
+
+ggplot(diamonds, aes(x = carat, y = price, color = cut)) + # compare to scatterplot again
+  geom_point(alpha=0.1)
 ```
