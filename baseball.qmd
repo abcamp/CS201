@@ -1,0 +1,180 @@
+---
+title: "Baseball Mapping"
+format: html
+editor: visual
+---
+
+### Load Libraries
+
+Put thidevtools::install_github("bdilday/GeomMLBStadiums")s in the console:
+
+```         
+devtools::install_github("bdilday/GeomMLBStadiums")
+```
+
+```{r, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(GeomMLBStadiums)
+library(ggplot2)
+library(dplyr)
+library(hexbin)
+```
+
+### Overview
+
+This lesson is based on [this bookdown tutorial](https://jtr13.github.io/cc20/geommlbstadiums.html)
+
+When thinking of geospatial analysis, we often think of maps, however, the spatial nature of data exists across many contexts.
+
+In this qmd, we will utilize `GeomMLBStadiums` and `ggplot` to perform geospatial analytics on baseball data.
+
+### Viewing the Stadium
+
+To just see the stadium, you can use `geom_mlb_stadium` with `ggplot`. The plots are drawn from the data in `MLBStadiumsPathData`, which is a dataframe included in the package. Below, I show the dimensions of Yankee Stadium.
+
+Notice that the parameter `stadium_ids` takes the team name rather than the stadium name. For example, if you want Wrigley Field, you would set `stadium_ids = "cubs"`.
+
+Make sure to set `stadium_segments = "all"`. By default it is set to `"outfield outer"`, which will only show the outer dimension of the stadium. I would also recommend using `coord_fixed()` so the graph doesn’t get stretched out and `theme_void` so that the background doesn’t affect the readability of the graph.
+
+```{r}
+ggplot() +
+  geom_mlb_stadium(stadium_ids = "yankees", stadium_segments = "all") +
+  coord_fixed() +
+  theme_void()
+```
+
+We can also visualize the stadiums of *other, less important* teams
+
+```{r}
+ggplot() + 
+  geom_mlb_stadium(stadium_ids = "all_mlb", 
+                   stadium_segments = "all", 
+                   stadium_transform_coords = TRUE) + 
+  facet_wrap(~team) + 
+  coord_fixed() +
+  theme_void()
+```
+
+### Adding Data
+
+![](images/clipboard-1923769085.png){width="331"}
+
+For this section, we will be using data from DJ LeMahieu’s 2020 regular season. We only utilize data on balls in play, as it wouldn’t make sense to plot other pitches spatially.
+
+```{r}
+DJLeMahieu <- read.csv("https://raw.githubusercontent.com/dncamp/GeomMLBStadiums-Tutorial/main/DJLeMahieu.csv")
+```
+
+### Your Turn - Exploratory Data Analysis (10 mins)
+
+Take this time to explore the data:
+
+```{r}
+ggplot(DJLeMahieu, aes(x = release_pos_x, y = release_pos_z)) + # 2D density plot
+  geom_density2d()
+```
+
+```{r}
+ggplot(DJLeMahieu, aes(x = pitch_type, y = release_speed)) +
+  geom_violin()
+
+```
+
+```{r}
+ggplot(DJLeMahieu, aes(x = pitch_type, y = events)) +
+  geom_count()
+```
+
+```{r}
+ggplot(DJLeMahieu, aes(x = events, y = release_speed, fill = description)) +
+  geom_boxplot() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+#### Some examples
+
+Release speed and pitch type
+
+```{r}
+ggplot(DJLeMahieu, aes(x = release_speed, fill = pitch_type)) +
+  geom_histogram(color = "black") +
+  theme_minimal() +
+  scale_fill_brewer(palette = "Set2")
+```
+
+Lefty vs Righty
+
+```{r}
+table(DJLeMahieu$events)
+```
+
+```{r}
+ggplot(data = DJLeMahieu, aes(y = events, fill = p_throws)) +
+  geom_bar() +
+  theme_minimal() +
+  scale_fill_viridis_d()
+```
+
+### Plot Data on the Field
+
+```{r}
+DJLeMahieu <- mlbam_xy_transformation(DJLeMahieu)
+```
+
+```{r}
+ggplot(DJLeMahieu, aes(x = hc_x_, y = hc_y_)) +
+  geom_spraychart(stadium_transform_coords = TRUE, stadium_segments = "all", size = 0.5) +
+  coord_fixed() +
+  theme_void()
+# spraychart is unique to package
+```
+
+```{r}
+ggplot(DJLeMahieu, aes(x = hc_x_, y = hc_y_, color = bb_type)) +
+  geom_spraychart(stadium_transform_coords = TRUE, stadium_segments = "all", size = 0.5) +
+  coord_fixed() +
+  theme_void() +
+  scale_color_viridis_d() +
+  facet_wrap(~p_throws)
+```
+
+### All Yankee Data
+
+While these spray charts may be the good for the data used above, it sometimes these plots, which are basically a variant of scatter plots, may not be the best solution. For example the data used above was taken during the 2020 MLB season which was shortened to 60 games due to COVID-19. If the data were over a full MLB season (162 games) or even over multiple seasons, the resulting spray chart could get quite messy. For example, below I plotted a spraychart for the entire New York Yankees team in 2019.
+
+```{r}
+yankees <- read.csv("https://raw.githubusercontent.com/dncamp/GeomMLBStadiums-Tutorial/main/Yankees.csv")
+yankees <- yankees %>% filter(hc_x != "null")
+yankees$hc_x <- as.numeric(yankees$hc_x)
+yankees$hc_y <- as.numeric(yankees$hc_y)
+yankees <- mlbam_xy_transformation(yankees)
+```
+
+```{r}
+ggplot(yankees, aes(x = hc_x_, y = hc_y_)) +
+  geom_spraychart(stadium_ids = "yankees", stadium_transform_coords = TRUE, stadium_segments = "all") +
+  coord_fixed() +
+  theme_void()
+```
+
+Looks pretty messy... but we have options!
+
+```{r}
+ggplot(yankees, aes(x = hc_x_, y = hc_y_)) +
+  geom_hex() +
+  scale_fill_distiller(palette = "Reds", direction = 1) +
+  geom_mlb_stadium(stadium_ids = "yankees", stadium_transform_coords = TRUE, stadium_segments = "all") +
+  coord_fixed() +
+  theme_void()
+```
+
+```{r}
+yankees$launch_angle <- as.numeric(yankees$launch_angle)
+
+ggplot(yankees, aes(x = hc_x_, y = hc_y_, z = launch_angle)) +
+  stat_summary_hex() +
+  scale_fill_distiller(palette = "YlOrRd", direction = 1) +
+  geom_mlb_stadium(stadium_ids = "yankees", stadium_transform_coords = TRUE, stadium_segments = "all") +
+  coord_fixed() +
+  theme_void()
+```
