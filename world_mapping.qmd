@@ -1,0 +1,129 @@
+---
+title: "Mapping"
+format: html
+editor: visual
+---
+
+### Overview
+
+Making maps is awesome and there are a ton of options/packages in R we can utiliize
+
+Today, we are going to keep it simple and focus on the following
+
+-   What is an sf object?
+
+-   Gradient vs Discrete Coloring
+
+-   Using familiar packages, `ggplot` and `plotly` to make a world map
+
+### Libraries
+
+```{r}
+library(tidyverse)
+library(rnaturalearth)
+library(rnaturalearthdata)
+library(scales)
+library(plotly)
+options(scipen = 99)
+```
+
+### Load in World Data
+
+```{r}
+world <- ne_countries(scale = "medium", returnclass = "sf")
+class(world)
+
+unique(world$name_long)
+```
+
+### Plotting
+
+#### Static, blank world map
+
+```{r}
+ggplot(data = world) +
+    geom_sf()
+```
+
+#### Gradient filled color map
+
+```{r}
+ggplot(data = world, aes(fill = pop_est)) +
+    geom_sf()
+```
+
+#### Continuous to Discrete
+
+```{r}
+world <- world %>%
+  mutate(pop_bin = cut(
+    pop_est,
+    breaks = c(0, 1000000, 10000000, 100000000, 500000000, Inf),  # Define meaningful ranges
+    labels = c("<1M", "1M-10M", "10M-100M", "100M-500M", ">500M"),  # Bin labels
+    include.lowest = TRUE
+  ))
+```
+
+```{r}
+ggplot(data = world, aes(fill = pop_bin)) +
+    geom_sf() +
+    scale_fill_viridis_d()
+```
+
+#### Interactivity
+
+```{r}
+world_pop_map_binned <- ggplot(data = world, aes(fill = pop_bin, label = name_long)) +
+    geom_sf() +
+    scale_fill_viridis_d() +
+  theme_minimal()
+
+ggplotly(world_pop_map_binned)
+```
+
+### Challenge
+
+Can you make a binned color map showing gdp by country?
+
+```{r}
+{r}
+# trying Jenks
+# install.packages("classInt")
+# library(classInt)
+
+jenks <- classIntervals(world$gdp_md, n = 10, style = "jenks")
+
+jenks$brks
+
+world_jenks <- world %>%
+  mutate(jenks = cut(gdp_md, breaks = jenks$brks, include.lowest = TRUE, labels = FALSE))
+
+gdp_world_jenks <- ggplot(data = world_jenks, aes(fill = as.factor(jenks), label = name_long)) +
+  geom_sf() +
+  scale_fill_viridis_d() +
+  labs(fill = "GDP Bins") + 
+  theme_minimal()
+
+ggplotly(gdp_world_jenks)
+
+jenks_labels <- c(
+  paste0("Bin 1: ", round(jenks$brks[1], 2), " to ", round(jenks$brks[2], 2)),
+  paste0("Bin 2: ", round(jenks$brks[2], 2), " to ", round(jenks$brks[3], 2)),
+  paste0("Bin 3: ", round(jenks$brks[3], 2), " to ", round(jenks$brks[4], 2)),
+  paste0("Bin 4: ", round(jenks$brks[4], 2), " to ", round(jenks$brks[5], 2)),
+  paste0("Bin 5: ", round(jenks$brks[5], 2), " to ", round(jenks$brks[6], 2)),
+  paste0("Bin 6: ", round(jenks$brks[6], 2), " to ", round(jenks$brks[7], 2)),
+  paste0("Bin 7: ", round(jenks$brks[7], 2), " to ", round(jenks$brks[8], 2)),
+  paste0("Bin 8: ", round(jenks$brks[8], 2), " to ", round(jenks$brks[9], 2)),
+  paste0("Bin 9: ", round(jenks$brks[9], 2), " to ", round(jenks$brks[10], 2)),
+  paste0("Bin 10: ", round(jenks$brks[10], 2), " and above")
+)
+
+gdp_world_jenks_labeled <- ggplot(data = world_jenks, aes(fill = as.factor(jenks), label=name_long)) +
+  geom_sf() +
+  scale_fill_viridis_d(labels = jenks_labels) +
+  labs(fill = "GDP Bins") +
+  theme_minimal()
+
+ggplotly(gdp_world_jenks_labeled)
+```
