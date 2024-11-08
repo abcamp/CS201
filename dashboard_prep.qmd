@@ -26,7 +26,7 @@ Which variables are interesting to you? What kinds of questions will you be aski
 
 ## Plots
 
-You can present plots as "answers" to your exploratory questions above. You'll need to generate at least three types of plots to put on your dashboard. At least one of them should be interactive using plotly or girafe. Test them out here, and include the accompanying questions that they answer.
+You can present plots as "answers" to your exploratory questions above. You'll need to generate at least three types of plots to put on your dashboard. At least one of them should be interactive using plotly or girafe. Test them out here, include the accompanying questions that they answer, and explain why/how the plot answers that question.
 
 ```{r}
 
