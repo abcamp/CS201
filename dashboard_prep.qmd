@@ -28,13 +28,15 @@ Which variables are interesting to you? What kinds of questions will you be aski
 
 You can present plots as "answers" to your exploratory questions above. You'll need to generate at least three types of plots to put on your dashboard. At least one of them should be interactive using plotly or girafe. Test them out here, include the accompanying questions that they answer, and explain why/how the plot answers that question.
 
+These can look really basic right now. We'll talk more about themes and layers next week.
+
 ```{r}
 
 ```
 
 ## flexdashboards
 
-Do some research online about what flexdashboards are and what they look like. See if you can find some examples of existing dashboards and layouts. Describe here what layout(s) you want to try.
+Do some research online about what flexdashboards are and what they look like. See if you can find some examples of existing dashboards and layouts. Describe here what single-page layout(s) you want to try.
 
 Please make sure you include space for at least three plots and at least one descriptive panel.
 
