@@ -398,7 +398,9 @@ What is the difference in % of complete vs. % of "no use" based on service & LOS
 
 -   group_by service or LOS, etc.
 
--   
+-   Look at service type and LOS separately
+
+-   decide what plots you want to show
 
 ```{r, message=FALSE}
 summary(as.factor(teds_d_select$services_d))
