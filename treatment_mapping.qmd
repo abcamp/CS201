@@ -405,7 +405,7 @@ What is the difference in % of complete vs. % of "no use" based on service & LOS
 ```{r, message=FALSE}
 summary(as.factor(teds_d_select$services_d))
 
-percent_completed_w_services <- teds_d_select %>%
+percent_completed_w_services_by_state <- teds_d_select %>%
   group_by(stfips, services_d) %>%
   summarize(
     total_cases = n(),
@@ -413,15 +413,29 @@ percent_completed_w_services <- teds_d_select %>%
   ) %>%
   mutate(percent_complete_by_service = (completed_cases / total_cases) * 100)
 
-nlevels(as.factor(percent_completed_w_services$stfips)) # checking to see that all stfips are represented
+nlevels(as.factor(percent_completed_w_services_by_state$stfips)) # checking to see that all stfips are represented
 
-percent_completed_w_services$state_fips <- sprintf('%02d', percent_completed_w_services$stfips)
+percent_completed_w_services_by_state$state_fips <- sprintf('%02d', percent_completed_w_services_by_state$stfips)
 
-percent_completed_w_services_map <- full_join(percent_completed_w_services,
+percent_completed_w_services_joined <- full_join(percent_completed_w_services_by_state,
                           states_map,
                           by = "state_fips")
 
-ggplot(percent_completed_w_services_map, aes(x = state_abbv, y = completed_cases, fill = services_d)) +
+ggplot(percent_completed_w_services_joined, aes(x = state_abbv, y = completed_cases, fill = services_d)) +
+  geom_bar(stat = "identity") +
+   theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+
+```{r}
+percent_completed_w_services <- teds_d_select %>%
+  group_by(services_d) %>%
+  summarize(
+    total_cases = n(),
+    completed_cases = sum(reason == "completed", na.rm = TRUE)
+  ) %>%
+  mutate(percent_complete_by_service = (completed_cases / total_cases) * 100)
+
+ggplot(percent_completed_w_services, aes(x = percent_complete_by_service, y = services_d, fill = services_d)) +
   geom_bar(stat = "identity") +
    theme(axis.text.x = element_text(angle = 90, hjust = 1))
 ```
