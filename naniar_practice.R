@@ -205,6 +205,8 @@ ggplot(airquality, aes(x = Ozone, y = Solar.R)) +
 
 # solution
 
+
+
 # facet by month
 p1 <-
   ggplot(data = airquality,
@@ -290,19 +292,15 @@ airquality %>%
 # low p = do reject H0 = data is not MCAR
 
 mcar_test(diamonds) # reject with high confidence
-mcar_test(starwars)
+mcar_test(airquality)
+
+# when you try with starwars, it will not work. why not?
 
 
 
+# remove the problematic rows and try again
+starwars.df <- starwars %>% 
+  select (-c(films, vehicles, starships))
 
-
-
-
-
-
-
-
-
-
-
+mcar_test(starwars.df)
 
