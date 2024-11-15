@@ -1,0 +1,9 @@
+﻿number,topic
+1,boxplot vs. violin plot
+2,dplyr::filter
+3,dplyr::case_when vs. ifelse
+4,dplyr::mutate
+5,plotly
+6,naniar
+7,reading in data (options)
+8,dplyr::summarize
