@@ -17,13 +17,6 @@ library(tidyverse)
 library(here)
 ```
 
-#### Read in the list of student names
-
-```{r, message=FALSE}
-names <- read_csv("cs201_names.csv")
-view(names)
-```
-
 #### Read in the list of topics
 
 ```{r, message=FALSE}
@@ -32,6 +25,13 @@ view(topics)
 
 # anything to edit?
 #topics[#, "topic"] <- 
+```
+
+#### Read in the list of student names
+
+```{r, message=FALSE}
+names <- read_csv("cs201_names.csv")
+view(names)
 ```
 
 #### Generate a random number in the names dataframe
