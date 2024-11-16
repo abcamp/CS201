@@ -116,7 +116,8 @@ Check out basic ggplot themes here: <https://ggplot2.tidyverse.org/reference/ggt
 ggplot(mpg, aes(x=displ, y=hwy)) +
   geom_point(aes(color=class)) + 
   labs(title="Engine Displacement vs. Highway MPG", x="Displacement (L)", y="Highway MPG") +
-  geom_smooth(method="lm", se=FALSE, color="black") 
+  geom_smooth(method="lm", se=FALSE, color="black") +
+  theme_dark()
 
 ```
 
@@ -132,7 +133,7 @@ ggplot(mpg, aes(x=displ, y=hwy)) +
   geom_point(aes(color=class)) + 
   labs(title="Engine Displacement vs. Highway MPG", x="Displacement (L)", y="Highway MPG") +
   geom_smooth(method="lm", se=FALSE, color="black") +
-  theme_solarized()
+  theme_solarized_2()
 ```
 
 #### You can create your own themes, too!
@@ -166,16 +167,19 @@ custom_theme <- theme(
 # generate the plot again, this time with the custom theme!
 ggplot(mpg, aes(x=displ, y=hwy)) +
   geom_point(aes(color=class)) +
-  labs(title="Engine Displacement vs. Highway MPG", x="Displacement (L)", y="Highway MPG")
-
+  labs(title="Engine Displacement vs. Highway MPG", x="Displacement (L)", y="Highway MPG") +
+  custom_theme
 
 # you can apply this to other plots, too!
 ggplot(mpg, aes(x=displ, y=hwy)) +
-  geom_boxplot(aes(color=class))
+  geom_boxplot(aes(color=class)) +
+  custom_theme
 
 # you can also combine this with other existing themes
 ggplot(mpg, aes(x=displ, y=hwy)) +
-  geom_boxplot(aes(color=class)) 
+  geom_boxplot(aes(color=class)) +
+  theme_minimal() +
+  custom_theme
 ```
 
 Quick note: the above is a *static theme*. You create it and use it as is.
