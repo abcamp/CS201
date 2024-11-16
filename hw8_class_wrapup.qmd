@@ -51,9 +51,11 @@ assigned_topics <- names %>%
 
 print(assigned_topics)
 
-#write.csv(assigned_topics, "data/assigned_topics_111524.csv")
-assigned_in_class <- read_csv("data/assigned_topics_111524.csv")
-print(assigned_in_class)
+# write.csv(assigned_topics, "data/assigned_topics_111524.csv")
+# assigned_in_class <- read_csv("data/assigned_topics_111524.csv")
+# assigned_in_class <- assigned_in_class %>%
+#   arrange(number)
+# print(assigned_in_class)
 
 # note that if you run the above script and randomize the names again, your outcome will be different from mine.
 # go with the topics in assigned_in_class and announced on Canvas!
