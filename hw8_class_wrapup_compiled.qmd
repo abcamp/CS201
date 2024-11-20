@@ -75,7 +75,9 @@ print(assigned_in_class)
 
 ```{r, message=FALSE}
 library(janitor)
-
+library(naniar)
+library(gtExtras)
+library(plotly)
 ```
 
 #### Read in penguins data
@@ -94,11 +96,46 @@ penguins <- penguins %>%
 
 ```
 
-## Alexander
+## Alexander (dplyr::filter)
+
+#### Filter by categorical variable
 
 ```{r, message=FALSE}
-# insert code snippet here
+penguins %>%
+  filter(sex == "MALE")
+```
 
+```{r}
+penguins %>% 
+  filter(species == "Adelie Penguin (Pygoscelis adeliae)")
+```
+
+#### Add to it's own dataframe
+
+```{r}
+female_penguins <- penguins %>%
+  filter(sex == "FEMALE")
+```
+
+#### Filter by numeric Variable
+
+```{r}
+penguins %>%
+  filter(flipper_length_mm >= 200)
+```
+
+#### Filter by multiple variables
+
+```{r}
+penguins %>%
+  filter(flipper_length_mm < 200, sex == "MALE")
+```
+
+#### Filter for multiple of the same variable
+
+```{r}
+penguins %>%
+  filter( species == "Adelie Penguin (Pygoscelis adeliae)", island == "Biscoe" | island == "Torgersen")
 ```
 
 ## Izack
@@ -115,17 +152,78 @@ penguins <- penguins %>%
 
 ```
 
-## Faith
+## Faith (plotly)
+
+Plotly function: Makes plots interactive.
 
 ```{r, message=FALSE}
-# insert code snippet here
+flipper_culmen <- ggplot(data = penguins, aes(x = culmen_length_mm, y = flipper_length_mm)) + geom_point()
 
+ggplotly(flipper_culmen)
+
+# can also add more information to the tooltip
+flipper_culmen <- ggplot(data = penguins, aes(x = culmen_length_mm, y = flipper_length_mm, label = species)) + 
+  geom_point()
+
+ggplotly(flipper_culmen)
 ```
 
-## Alexandrea
+## Alexandrea (Naniar)
 
-```{r, message=FALSE}
-# insert code snippet here
+"Naniar" is an R package designed to handle, visualize, and explore missing data effectively.
+
+Some functions of naniar that are beneficial are `miss_var_summary()`, which summarizes the amount of missing data in variables, `gg_miss_var()`, which visualizes the distribution of missing data in variables, and `geom_miss_point()`, which allows for visualizing missingness within scatterplots to explore patterns in missing data across two variables.
+
+#### Explore Missing Data:
+
+The first function provides a summary of the missing values for each variable in the dataset. It returns the number and proportion of missing values for all variables.
+
+The second function combines a summary table (`miss_var_summary()`) and a bar plot (`gg_miss_var()`) to provide both tabular and visual representations of missing values in the dataset.
+
+```{r}
+miss_var_summary(penguins)
+
+miss_var_summary(penguins) %>% 
+  gt() %>%
+  gt_theme_guardian() %>% 
+  tab_header(title = "Missingness of variables")
+```
+
+#### Plotting Missing Data in Distribution:
+
+The first creates a bar plot showing the number of missing values for each variable. It is a quick visual way to assess missingness.
+
+The second combines a summary table (`miss_var_summary()`) and a bar plot (`gg_miss_var()`) to provide both tabular and visual representations of missing values in the dataset.
+
+```{r}
+# plot
+gg_miss_var(penguins) # basic plot
+
+penguins %>% miss_var_summary()
+gg_miss_var(penguins)
+```
+
+#### Visualizing Missingness with Scatter plots:
+
+The first scatter plot visualizes missing data in the variables `sex` and `culmen_length_mm`. The `geom_miss_point()` function highlights missing values within the data points, enabling an exploration of patterns of missingness.
+
+The second is similar to the previous scatter plot but faceted by `island`. This allows you to examine missingness patterns across different islands in the dataset.
+
+```{r}
+ggplot(penguins, aes(x = sex, y = culmen_length_mm)) +
+  geom_miss_point() +
+  theme_bw(base_size = 16) +
+  labs(title = "Culmen Length by Sex",
+       caption = paste0("Source: ggplot2::penguins")) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
+
+ggplot(penguins, aes(x = sex, y = culmen_length_mm)) +
+  geom_miss_point() +
+  theme_bw(base_size = 16) +
+  labs(title = "Culmen Length by Sex",
+       caption = paste0("Source: ggplot2::penguins")) +
+  facet_wrap(~island) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
 
 ```
 
