@@ -136,7 +136,7 @@ penguins <- penguins %>%
 
 ```
 
-## Christian
+## Christian (dplyr::summarize)
 
 ```{r, message=FALSE, warning=FALSE}
 #summarize by culmen length
