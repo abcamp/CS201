@@ -55,7 +55,11 @@ print(assigned_topics)
 assigned_in_class <- read_csv("data/assigned_topics_111524.csv")
 assigned_in_class <- assigned_in_class %>%
   arrange(number)
-print(assigned_in_class)
+View(assigned_in_class)
+
+# reordered <- assigned_in_class %>%
+#   mutate(pres_order = sample(1:8, nrow(assigned_in_class), replace = FALSE)) %>%
+#   arrange(pres_order)
 
 # note that if you run the above script and randomize the names again, your outcome will be different from mine.
 # go with the topics in assigned_in_class and announced on Canvas!
@@ -89,7 +93,7 @@ penguins <- penguins %>%
   clean_names()
 ```
 
-## Rhyn
+## Rhyn (boxplot vs. violin plot)
 
 ```{r, message=FALSE}
 # insert code snippet here
@@ -138,18 +142,62 @@ penguins %>%
   filter( species == "Adelie Penguin (Pygoscelis adeliae)", island == "Biscoe" | island == "Torgersen")
 ```
 
-## Izack
+## Izack (dplyr:: case_when)
 
 ```{r, message=FALSE}
-# insert code snippet here
+penguins_hw_8 <- penguins %>%
+  mutate(
+    size_of_penguin = case_when(
+      body_mass_g < 3000 ~ "Small Penguin", 
+      # If body mass < 3000g, then call it Small
+      body_mass_g >= 3000 & body_mass_g <= 4000 ~ "Medium Penguin", 
+      # If between 3000g and 4000g, then call it Medium
+      body_mass_g > 4000 ~ "Large Penguin",     
+      # If > 4000g, then call it Large
+      TRUE ~ "Unknown Size"                  
+      # If it is anything else call it unknown; because there is no weight
+      
+    )) %>%
+  select(species, island, body_mass_g, size_of_penguin)
+#select to only show these columns
 
+# Show penguins_hw_8
+show(penguins_hw_8)
 ```
 
-## Lydia
+## Lydia (dplyr::mutate)
+
+#### add column for body mass in kilograms
 
 ```{r, message=FALSE}
-# insert code snippet here
+#adds column to table with penguins data
+penguins %>% 
+  mutate(body_mass_kg = body_mass_g / 1000)
 
+#adds column to penguins data
+penguins <- penguins %>% 
+  mutate(body_mass_kg = body_mass_g / 1000) 
+```
+
+#### capitalize "penguin" in species for each observation
+
+```{r}
+#fixes column in a table with penguins data
+penguins %>% 
+  mutate(species = str_replace(species, "penguin", "Penguin"))
+
+#fixes column in penguins data
+penguins <- penguins %>% 
+  mutate(species = str_replace(species, "penguin", "Penguin"))
+```
+
+#### capitalize species type in species for each observation - multiple mutations at once
+
+```{r}
+penguins <- penguins %>% 
+  mutate(species = str_replace(species, "adeliae", "Adeliae")) %>% 
+  mutate(species = str_replace(species, "papua", "Papua")) %>% 
+  mutate(species = str_replace(species, "antarctica", "Antarctica"))
 ```
 
 ## Faith (plotly)
@@ -227,7 +275,7 @@ ggplot(penguins, aes(x = sex, y = culmen_length_mm)) +
 
 ```
 
-## Mehana
+## Mehana (wildcard!!)
 
 ```{r, message=FALSE}
 # insert code snippet here
