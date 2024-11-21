@@ -113,7 +113,7 @@ ggplot(flowerdata, aes(x = climate, y = longevity_years, color = climate)) +
 
 ```{r}
 height_petals_plot <- ggplot(flowerdata, aes(x = place_of_origin, y = height_cm)) +
-  geom_count(aes(color = climate), alpha = 0.7) +
+  geom_count(aes(color = climate), alpha = 0.7) + # changed this to a count plot. feel free to change it back!!
   geom_smooth(method = "lm", color = "red", se = FALSE) +  
   labs(title = "Flower Height vs Number of Petals",
        x = "Height (cm)",
