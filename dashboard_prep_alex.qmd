@@ -1,0 +1,147 @@
+---
+title: "Dashboard Prep"
+format: html
+editor: visual
+---
+
+## HW #7: Dashboard Prep
+
+You've looked at different types of data, conducted exploratory data analysis, manipulated data with dplyr and other tidy methods, created maps.... Now it's time to think about your flexdashboard final project!
+
+## Data
+
+What data are you planning to use? Describe the data here and read it in below.
+
+\-"The flower data I previously used in the EDA assignment made by Maryna Shut. This is a dataset with information about 73 different flowers: their names, place of origin, height, longevity, industry use and number of petals. It contains 72 observations (rows) and 10 variables (columns)."
+
+```{r}
+library(here)
+library(tidyverse)
+library(janitor)
+flowerdata <- read_csv(here("data/flowers.csv"))
+
+flowerdata <- flowerdata %>% clean_names()
+```
+
+## Variables of interest
+
+Which variables are interesting to you? What kinds of questions will you be asking as you look into this data? What story is your data telling? Please include three questions here. The code chunk below is optional.
+
+-   "Is there a relationship between the color(s) of a flower and the climate they grow in?"
+
+-   "Is there a relationship between a flower's longevity (in years) and the climate they grow in?"
+
+-   "Is there a relationship between a flower's height (in centimeters) and their average number of petals?"
+
+## Plots
+
+You can present plots as "answers" to your exploratory questions above. You'll need to generate at least three types of plots to put on your dashboard. At least one of them should be interactive using plotly or girafe. Test them out here, include the accompanying questions that they answer, and explain why/how the plot answers that question.
+
+These can look really basic right now. We'll talk more about themes and layers next week.
+
+```{r}
+# install.packages("plotly")
+# install.packages("dplyr")
+# install.packages("ggplot2")
+# install.packages("viridis")
+
+library(plotly)
+library(dplyr)
+library(ggplot2)
+
+color_climate_summary <- flowerdata %>%
+  group_by(color, climate) %>%
+  tally() %>%
+  arrange(color, desc(n))
+
+color_climate_plot <- ggplot(color_climate_summary, aes(x = color, y = n, fill = climate)) +
+  geom_bar(stat = "identity") +
+  labs(title = "Flower Color Distribution by Climate",
+       x = "Color",
+       y = "Count of Flowers",
+       fill = "Climate") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
+
+interactive_color_climate_plot <- ggplotly(color_climate_plot)
+interactive_color_climate_plot
+
+
+#### AC notes
+# collapse "Yellow, orange" to "orange, yellow"
+# do this before color_climate_summary
+flowerdata$color <- str_replace(flowerdata$color, "Yellow, orange", "Orange, yellow")
+# do this for each combo you want to collapse
+# then run color_climate_summary, etc., again
+```
+
+```{r}
+longevity_climate_plot <- ggplot(flowerdata, aes(x = climate, y = longevity_years, color = climate)) +
+  geom_boxplot() +
+  labs(title = "Flower Longevity by Climate",
+       x = "Climate",
+       y = "Longevity (Years)") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
+
+# Convert ggplot to plotly for interactivity
+interactive_longevity_climate_plot <- ggplotly(longevity_climate_plot)
+interactive_longevity_climate_plot
+
+
+### AC notes
+class(flowerdata$climate)
+flowerdata$climate <- as.factor(flowerdata$climate)
+summary(flowerdata$climate)
+
+# heatmap
+flowerdata %>% 
+  count(climate, longevity_years) %>%  
+  mutate(color = fct_rev(climate)) %>%
+  ggplot(aes(x = climate, y = longevity_years)) +
+  geom_tile(aes(fill = n))
+
+# count plot
+ggplot(flowerdata, aes(x = climate, y = longevity_years, color = climate)) +
+  geom_count() +
+  labs(title = "Flower Longevity by Climate",
+       x = "Climate",
+       y = "Longevity (Years)") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
+```
+
+```{r}
+height_petals_plot <- ggplot(flowerdata, aes(x = place_of_origin, y = height_cm)) +
+  geom_count(aes(color = climate), alpha = 0.7) +
+  geom_smooth(method = "lm", color = "red", se = FALSE) +  
+  labs(title = "Flower Height vs Number of Petals",
+       x = "Height (cm)",
+       y = "Number of Petals") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
+
+# Convert ggplot to plotly for interactivity
+interactive_height_petals_plot <- ggplotly(height_petals_plot)
+interactive_height_petals_plot
+```
+
+## flexdashboards
+
+Do some research online about what flexdashboards are and what they look like. See if you can find some examples of existing dashboards and layouts. Describe here what single-page layout(s) you want to try.
+
+Please make sure you include space for at least three plots and at least one descriptive panel.
+
+**Important note**: You'll find some pretty neat interactive dashboards that incorporate shiny apps. We will not be covering that in this class, so please don't attempt it (...unless you really want to?)
+
+What projects have you found that look nice/doable?
+
+heatmaps, ggplotly geom_smooth Linear Regression, and whatever other suggestions you may have that I have not heard of.
+
+Link to resource: <https://rstudio.github.io/flexdashboard/articles/examples.html>\
+
+What layout(s) do you think you want to apply?
+
+Focal chart (top), focal chart (left), and chart stack (scrolling).
+
+Link: <https://pkgs.rstudio.com/flexdashboard/articles/layouts.html>
