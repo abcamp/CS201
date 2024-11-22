@@ -126,6 +126,58 @@ interactive_height_petals_plot <- ggplotly(height_petals_plot)
 interactive_height_petals_plot
 ```
 
+## Plots from AC
+
+```{r}
+
+# stacked bar graph showing longevity by climate
+ggplot(flowerdata, aes(x = longevity_years, fill = climate)) +
+  geom_bar(position = "stack") +
+  labs(
+    title = "Longevity by Climate",
+    x = "Longevity (years)",
+    y = "Count"
+  ) +
+  theme_minimal()
+
+## explore flower use type
+# manipulate the data into long format, and create two columns called use_type and count
+flowerdata_long <- flowerdata %>%
+  pivot_longer(cols = c(cut_flowers, perfumes, medicine), 
+               names_to = "use_type", 
+               values_to = "count")
+
+# flower use by place of origin
+ggplot(flowerdata_long %>% filter(count == 1), aes(x = place_of_origin, fill = use_type)) +
+  geom_bar(position = "stack") +
+  labs(title = "Flower Uses by Place of Origin", x = "Place of Origin", y = "Count") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+# flower use by name
+ggplot(flowerdata_long %>% filter(count ==1), aes(x = name, fill = use_type)) +
+  geom_bar(position = "stack") +
+  labs(title = "Flower Uses by Name", x = "Name", y = "Count") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) 
+
+# flower uses by color
+ggplot(flowerdata_long %>% filter(count == 1), aes(x = color, fill = use_type)) +
+  geom_bar(position = "stack") +
+  labs(title = "Flower Uses by Color", x = "Color", y = "Count") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+# distribution (count) of flower uses
+ggplot(flowerdata_long %>% filter(count == 1), aes(x = use_type, fill = use_type)) +
+  geom_bar(position = "dodge") +
+  labs(title = "Distribution of Flower Uses", x = "Use Type", y = "Count") +
+  theme(legend.position = "none")
+
+length(unique(flowerdata$name))
+
+
+
+
+```
+
 ## flexdashboards
 
 Do some research online about what flexdashboards are and what they look like. See if you can find some examples of existing dashboards and layouts. Describe here what single-page layout(s) you want to try.
@@ -145,3 +197,5 @@ What layout(s) do you think you want to apply?
 Focal chart (top), focal chart (left), and chart stack (scrolling).
 
 Link: <https://pkgs.rstudio.com/flexdashboard/articles/layouts.html>
+
+## 
